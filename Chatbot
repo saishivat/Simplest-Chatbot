@@ -1,1 +1,24 @@
+!pip install colab-xterm #https://pypi.org/project/colab-xterm/
+%load_ext colabxterm
 
+%xterm
+
+#inside terminal run the following commands
+curl -fsSL https://ollama.com/install.sh | sh
+ollama serve & ollama pull llama3
+
+# in new cell
+!pip install langchain
+!pip install langchain-core
+!pip install langchain-community
+
+from langchain_community.llms import Ollama
+from langchain_core.prompts import ChatPromptTemplate
+prompt=ChatPromptTemplate.from_messages(
+    [("system","Help as an assistant"),("user","Question:{question}")])
+llm=Ollama(model="qwen2:0.5b")
+chain=prompt|llm
+
+#in a new cell- just run this individual cell to reload chatbot
+question=input("ask a question")
+chain.invoke({"question":question})
